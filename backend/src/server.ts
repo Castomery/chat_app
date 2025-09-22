@@ -4,11 +4,15 @@ import "dotenv/config";
 import path from 'path';
 import authRouter from './routes/auth.routes.ts';
 import messageRouter from './routes/message.routes.ts';
+import { connectToDB } from './configs/mongoDB.ts';
+
 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
+
+connectToDB();
 
 
 app.use(express.json());
