@@ -1,14 +1,9 @@
 import express from 'express';
+import { login, signUp } from '../controllers/auth.controller.ts';
 
 const authRouter = express.Router();
 
-authRouter.post('/login', (req, res) => {
-  // Handle login
-  res.send('Login endpoint');
-});
-authRouter.post('/register', (req, res) => {
-  // Handle registration
-  res.send('Register endpoint');
-});
+authRouter.post('/login', login);
+authRouter.post('/signup', signUp);
 
 export default authRouter;
