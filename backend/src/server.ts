@@ -1,15 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import "dotenv/config";
 import path from 'path';
 import authRouter from './routes/auth.routes.ts';
 import messageRouter from './routes/message.routes.ts';
 import { connectToDB } from './configs/mongoDB.ts';
+import { ENV } from './configs/env.ts';
 
 
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = ENV.PORT;
 const __dirname = path.resolve();
 
 connectToDB();
@@ -23,7 +23,7 @@ app.use('/api/messages', messageRouter);
 
 
 
-if(process.env.NODE_ENV === 'production') {
+if(ENV.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
   app.get('/*splat', (req, res) => {

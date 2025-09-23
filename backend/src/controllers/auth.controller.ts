@@ -1,8 +1,9 @@
 import type { Request, Response } from 'express';
 import UserModel from '../models/user.model.ts';
 import bcrypt from 'bcrypt';
-import "dotenv/config";
 import generateToken from '../utils/generateToken.ts';
+import { sendWelcomeEmail } from '../emails/emailHandlers.ts';
+import { ENV } from '../configs/env.ts';
 
 
 const login = async (req: Request, res: Response) => {
@@ -46,12 +47,23 @@ const signUp = async (req: Request, res: Response) => {
 
         const token = generateToken(user._id, res);
 
+        try {
+            if(ENV.CLIENT_URL){
+                await sendWelcomeEmail(user.email, user.fullName, ENV.CLIENT_URL);
+            } else {
+                console.error('CLIENT_URL is not defined');
+            }
+        } catch (error) {
+            console.error('Error sending welcome email:', error);
+        }
+
         res.status(201).json({ message: 'User registered successfully',user:{
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
         }, token });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
