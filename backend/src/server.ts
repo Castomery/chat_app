@@ -8,10 +8,11 @@ import { ENV } from './configs/env.ts';
 import cookieParser from 'cookie-parser';
 
 
-
 const app = express();
 const PORT = ENV.PORT;
 const __dirname = path.resolve();
+
+
 
 connectToDB();
 
@@ -25,7 +26,7 @@ app.use('/api/messages', messageRouter);
 
 
 
-if(ENV.NODE_ENV === 'production') {
+if (ENV.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
   app.get('/*splat', (req, res) => {
