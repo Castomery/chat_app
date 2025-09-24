@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import generateToken from '../utils/generateToken.ts';
 import { sendWelcomeEmail } from '../emails/emailHandlers.ts';
 import { ENV } from '../configs/env.ts';
+import cloudinary from '../configs/cloudinary.ts';
 
 
 const login = async (req: Request, res: Response) => {
@@ -76,7 +77,7 @@ const signUp = async (req: Request, res: Response) => {
         const token = generateToken(user._id, res);
 
         try {
-            if(ENV.CLIENT_URL){
+            if (ENV.CLIENT_URL) {
                 await sendWelcomeEmail(user.email, user.fullName, ENV.CLIENT_URL);
             } else {
                 console.error('CLIENT_URL is not defined');
@@ -85,12 +86,14 @@ const signUp = async (req: Request, res: Response) => {
             console.error('Error sending welcome email:', error);
         }
 
-        res.status(201).json({ message: 'User registered successfully',user:{
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            profilePic: user.profilePic,
-        }, token });
+        res.status(201).json({
+            message: 'User registered successfully', user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profilePic: user.profilePic,
+            }, token
+        });
 
     } catch (error) {
         console.error(error);
@@ -99,8 +102,35 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const logout = async (_: Request, res: Response) => {
-    res.cookie('token',"",{maxAge:0});
+    res.cookie('token', "", { maxAge: 0 });
     res.status(200).json({ message: 'Logged out successfully' });
 };
 
-export { login, signUp, logout };
+const updateProfile = async (req: Request, res: Response) => {
+
+    try {
+
+        const { profilePic } = req.body;
+        if (!profilePic) return res.status(400).json({ message: "Picture requared" });
+
+        const userId = (req as any).userId;
+
+        const uploadRes = await cloudinary.uploader.upload(profilePic);
+
+        const updateUser = await UserModel.findByIdAndUpdate(userId, { profilePic: uploadRes.secure_url }, { new: true });
+
+        res.status(200).json(updateUser);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+
+
+}
+
+const checkAuth = async(req: Request, res: Response) => {
+    res.status(200).json((req as any).user);
+}
+
+export { login, signUp, logout, updateProfile, checkAuth };

@@ -2,14 +2,14 @@ import jwt from 'jsonwebtoken';
 import type { Response } from 'express';
 import {ENV} from '../configs/env.ts';
 
- const generateToken = (id: Object, res: Response) => {
+ const generateToken = (userId: Object, res: Response) => {
 
     const {JWT_SECRET} = ENV;
     if (!JWT_SECRET) {
         throw new Error('JWT_SECRET is not defined in environment variables');
     }
 
-    const token = jwt.sign({ id }, JWT_SECRET);
+    const token = jwt.sign({ userId }, JWT_SECRET);
 
     res.cookie('token', token, {
         httpOnly: true,
