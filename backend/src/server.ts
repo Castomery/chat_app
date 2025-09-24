@@ -5,6 +5,7 @@ import authRouter from './routes/auth.routes.ts';
 import messageRouter from './routes/message.routes.ts';
 import { connectToDB } from './configs/mongoDB.ts';
 import { ENV } from './configs/env.ts';
+import cookieParser from 'cookie-parser';
 
 
 
@@ -17,6 +18,7 @@ connectToDB();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 app.use('/api/messages', messageRouter);
