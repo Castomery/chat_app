@@ -8,6 +8,34 @@ import { ENV } from '../configs/env.ts';
 
 const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    try {
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+        const token = generateToken(user._id, res);
+
+        res.status(200).json({
+            message: 'Login successful', user: {
+                _id: user._id,
+                fullName: user.fullName,
+            }, token
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
 const signUp = async (req: Request, res: Response) => {
@@ -68,9 +96,11 @@ const signUp = async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-
-
-
 };
 
-export { login, signUp };
+const logout = async (_: Request, res: Response) => {
+    res.cookie('token',"",{maxAge:0});
+    res.status(200).json({ message: 'Logged out successfully' });
+};
+
+export { login, signUp, logout };
