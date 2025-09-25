@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             set({isCheckingAuth: false});
         }
     },
-    signup: async(data:SignUpData)=>{
+    signup: async(data)=>{
         set({isSigningUp:true})
         
         try {    
@@ -49,7 +49,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             set({isSigningUp:false});
         }
     },
-    login: async(data:LoginData)=>{
+    login: async(data)=>{
         set({isLoggingIn:true})
         
         try {    
