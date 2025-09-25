@@ -1,12 +1,54 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import ChatPage from "./pages/ChatPage"
 import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
+import { useAuthStore } from "./store/useAuthStore"
+import { useEffect, type ReactNode } from "react"
+import PageLoader from "./components/PageLoader"
+import { Toaster } from "react-hot-toast"
 
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
+const ProtectedRoute = ({children} : ProtectedRouteProps) => {
+
+  const {authUser} = useAuthStore();
+
+  if (!authUser) {
+    return <Navigate to="/login" replace />
+  }
+
+  // if (!user.isVerified) {
+  //   return <Navigate to="/verify-email" replace />
+  // }
+  return children;
+}
+
+const RedirectAuthenticatedUser = ({children} : ProtectedRouteProps) => {
+
+  const {authUser} = useAuthStore();
+
+  if (authUser) {
+    return <Navigate to="/" replace />
+  }
+
+  return children;
+}
 
 
 const App = () => {
 
+  const {checkAuth, isCheckingAuth, authUser} = useAuthStore();
+
+
+  useEffect(() => {
+    checkAuth();
+  },[checkAuth]);
+
+  console.log(authUser);
+
+  if(isCheckingAuth) return <PageLoader/>
 
   return (
     <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p-4 overflow-hidden">
@@ -17,10 +59,12 @@ const App = () => {
       <div className="absolute bottom-0 -right-4 size-96 bg-cyan-500 opacity-20 blur-[100px]" />
 
       <Routes>
-        <Route path="/" element={<ChatPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+        <Route path="/login" element={<RedirectAuthenticatedUser><LoginPage /></RedirectAuthenticatedUser>} />
+        <Route path="/signup" element={<RedirectAuthenticatedUser><SignUpPage /></RedirectAuthenticatedUser>} />
       </Routes>
+
+      <Toaster/>
     </div>
   )
 }
