@@ -10,8 +10,7 @@ authRouter.use(arcjectProtection);
 authRouter.post('/login', login);
 authRouter.post('/signup', signUp);
 authRouter.post('/logout',logout);
-authRouter.post('/update', authProtectRoute, updateProfile)
-
-authRouter.get('/check-auth',authProtectRoute, checkAuth)
+authRouter.put('/update-profile', authProtectRoute, updateProfile);
+authRouter.get('/check-auth',authProtectRoute, checkAuth);
 
 export default authRouter;

@@ -113,7 +113,7 @@ const updateProfile = async (req: Request, res: Response) => {
         const { profilePic } = req.body;
         if (!profilePic) return res.status(400).json({ message: "Picture requared" });
 
-        const userId = (req as any).userId;
+        const userId = (req as any).user._id;
 
         const uploadRes = await cloudinary.uploader.upload(profilePic);
 
