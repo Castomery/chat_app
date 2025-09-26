@@ -11,6 +11,6 @@ messageRouter.get('/contacts',getAllContacts);
 messageRouter.get('/chats',getAllChats);
 messageRouter.get('/:id',getMessagesByUserId);
 
-messageRouter.post("send/:id",sendMessage);
+messageRouter.post("/send/:id",sendMessage);
 
 export default messageRouter;
