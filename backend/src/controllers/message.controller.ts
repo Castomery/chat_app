@@ -31,8 +31,8 @@ const getAllChats = async (req: Request, res: Response) => {
             ]
         })
 
-        const chatPartnersIds = [...new Set(messages.map(msg => msg.senderId.toString() === loggedInUserId ? msg.receiverId.toString() : msg.senderId.toString()))]
-        
+        const chatPartnersIds = [...new Set(messages.map(msg => msg.senderId.toString() === loggedInUserId.toString() ? msg.receiverId.toString() : msg.senderId.toString()))]
+
         const chatPartners = await UserModel.find({_id: {$in:chatPartnersIds}}).select("-password");
 
         res.status(200).json(chatPartners);
