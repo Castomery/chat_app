@@ -1,21 +1,23 @@
 import {create} from 'zustand';
 import { axiosInstance } from '../configs/axios';
 import toast from 'react-hot-toast';
+import type { User } from '../types/types';
 
 interface ChatStoreState {
-    allContacts: Array<object>,
-    chats: Array<object>,
+    allContacts: Array<User>,
+    chats: Array<User>,
     messages: Array<object>,
     activeTab: string,
-    selectedUser: object | null,
+    selectedUser: User | null,
     isUserLoading: boolean,
     isMessagesLoading: boolean,
     isSoundEnabled: boolean,
     toggleSound: () => void,
     setActiveTab: (tab:string) => void,
-    setSelectedUser: (selectedUser:object) => void,
+    setSelectedUser: (selectedUser:User|null) => void,
     getAllContacts: () => void,
     getMyChatPartners: () => void,
+    getMessagesByUserId: (userId:string)=> void,
 }
 
 export const useChatStore = create<ChatStoreState>((set,get) => ({
@@ -56,6 +58,19 @@ export const useChatStore = create<ChatStoreState>((set,get) => ({
             toast.error(error.response.data.message);
         }finally{
             set({isUserLoading:false});
+        }
+    },
+
+    getMessagesByUserId: async(userId) =>{
+        set({isMessagesLoading:true})
+
+        try {
+            const res = await axiosInstance.get(`/messages/${userId}`);
+            set({messages:res.data});
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }finally{
+            set({isMessagesLoading:false});
         }
     }
 }))

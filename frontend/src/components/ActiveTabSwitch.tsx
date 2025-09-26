@@ -5,8 +5,6 @@ const ActiveTabSwitch = () => {
 
   const { activeTab, setActiveTab } = useChatStore();
 
-  console.log(activeTab);
-
   return (
     <div className='tabs tabs-box bg-transparent p-2 m-2 flex w-full'>
 
