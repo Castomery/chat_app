@@ -8,12 +8,14 @@ interface ChatStoreState {
     messages: Array<object>,
     activeTab: string,
     selectedUser: object | null,
-    isUsersLoading: boolean,
+    isUserLoading: boolean,
     isMessagesLoading: boolean,
     isSoundEnabled: boolean,
     toggleSound: () => void,
     setActiveTab: (tab:string) => void,
     setSelectedUser: (selectedUser:object) => void,
+    getAllContacts: () => void,
+    getMyChatPartners: () => void,
 }
 
 export const useChatStore = create<ChatStoreState>((set,get) => ({
@@ -22,7 +24,7 @@ export const useChatStore = create<ChatStoreState>((set,get) => ({
     messages: [],
     activeTab: "chats",
     selectedUser: null,
-    isUsersLoading: false,
+    isUserLoading: false,
     isMessagesLoading: false,
     isSoundEnabled: (localStorage.getItem("isSoundEnabled") === "true"),
     toggleSound: () => {
@@ -34,26 +36,26 @@ export const useChatStore = create<ChatStoreState>((set,get) => ({
     setActiveTab: (tab) => set({activeTab: tab}),
     setSelectedUser: (selectedUser) => set({selectedUser}),
 
-    getAllContancts: async() => {
-        set({isUsersLoading: true})
+    getAllContacts: async() => {
+        set({isUserLoading: true})
         try {
             const res = await axiosInstance.get('/messages/contacts');
             set({allContacts: res.data})
         } catch (error) {
             toast.error(error.response.data.message);
         }finally{
-            set({isUsersLoading:false});
+            set({isUserLoading:false});
         }
     },
     getMyChatPartners: async() => {
-        set({isUsersLoading: true})
+        set({isUserLoading: true})
         try {
             const res = await axiosInstance.get('/messages/chats');
             set({chats: res.data})
         } catch (error) {
             toast.error(error.response.data.message);
         }finally{
-            set({isUsersLoading:false});
+            set({isUserLoading:false});
         }
     }
 }))

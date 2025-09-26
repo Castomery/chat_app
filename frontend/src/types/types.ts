@@ -1,7 +1,8 @@
 export interface User {
-  id: string;
-  name: string;
+  id: object;
+  fullName: string;
   email: string;
+  profilePic:string,
 }
 
 export interface SignUpData{
