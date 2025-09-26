@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import useKeyboardSound from "../hooks/useKeyboardSound";
 import { useChatStore } from "../store/useChatStore";
 import toast from "react-hot-toast";
@@ -6,13 +6,13 @@ import { ImageIcon, SendIcon, XIcon } from "lucide-react";
 
 const MessageInput = () => {
   const { playRandomkeyStrokeSound } = useKeyboardSound();
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
   const [imagePrew, setImagePrew] = useState<string|null>(null);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement| null>(null);
 
   const { sendMessage, isSoundEnabled } = useChatStore();
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e : FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!text.trim() && !imagePrew) return;

@@ -11,9 +11,10 @@ const ChatContainer = () => {
 
   const {selectedUser, getMessagesByUserId, messages, isMessagesLoading} = useChatStore();
   const {authUser} = useAuthStore();
-  const messageEndRef = useRef(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if(selectedUser)
     getMessagesByUserId(selectedUser._id);
   },[selectedUser, getMessagesByUserId])
 
@@ -22,6 +23,8 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({behavior: "smooth"});
     }
   }, [messages]);
+
+  if(!authUser) return null;
 
   return (
     <>

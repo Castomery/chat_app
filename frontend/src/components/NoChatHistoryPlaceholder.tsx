@@ -1,7 +1,7 @@
 import { MessageCircleIcon } from "lucide-react";
 
 interface Props {
-    name: string;
+    name: string | undefined;
 }
 
 const NoChatHistoryPlaceholder = ({ name }: Props) => {
