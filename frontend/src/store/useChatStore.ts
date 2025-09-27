@@ -21,6 +21,8 @@ interface ChatStoreState {
   getMyChatPartners: () => void;
   getMessagesByUserId: (userId: string) => void;
   sendMessage: (messageData: { text: string; image: string | null }) => void;
+  subscribeToMessages: () => void;
+  unsubscribeFromMessages: () => void;
 }
 
 export const useChatStore = create<ChatStoreState>((set, get) => ({
@@ -131,5 +133,32 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
         toast.error("Something went wrong");
       }
     }
+  },
+
+  subscribeToMessages: ()=>{
+    const {selectedUser, isSoundEnabled} = get();
+
+    if(!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+
+    socket?.on("newMessage", (newMessage) => {
+
+      const isMessageSendFromSelectedUser = newMessage.senderId === selectedUser._id;
+      if(!isMessageSendFromSelectedUser) return;
+
+      const currentMessages = get().messages;
+      set({messages: [...currentMessages, newMessage]})
+
+      if(isSoundEnabled){
+        const notificationSound = new Audio("/sounds/notification.mp3");
+        notificationSound.currentTime = 0;
+        notificationSound.play().catch(error => console.log("Audio play failed:", error));
+      }
+    })
+  },
+
+  unsubscribeFromMessages : () => {
+    const socket = useAuthStore.getState().socket;
+    socket?.off("newMessage");
   },
 }));
