@@ -3,6 +3,9 @@ import { axiosInstance } from "../configs/axios";
 import toast from "react-hot-toast";
 import type { LoginData, SignUpData, User } from "../types/types";
 import axios from "axios";
+import { io, type Socket } from "socket.io-client";
+
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
 
 interface AuthState {
   authUser: User | null;
@@ -14,17 +17,24 @@ interface AuthState {
   login: (data: LoginData) => void;
   logout: () => void;
   updateProfile: (data: object) => void;
+  socket: null| Socket;
+  onlineUsers: Array<string>;
+  connectSocket: () => void;
+  disconnectSocket: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
   isLoggingIn: false,
+  socket: null,
+  onlineUsers: [],
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check-auth");
       set({ authUser: res.data });
+      get().connectSocket();
     } catch (error) {
       console.log(error);
       set({ authUser: null });
@@ -40,6 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ authUser: res.data });
 
       toast.success("Account created successfully!");
+      get().connectSocket();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
@@ -59,6 +70,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ authUser: res.data });
 
       toast.success("Logged in successfully!");
+
+      get().connectSocket();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
@@ -77,6 +90,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ authUser: null });
 
       toast.success("Looged out!");
+      get().disconnectSocket();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
@@ -99,5 +113,25 @@ export const useAuthStore = create<AuthState>((set) => ({
         toast.error("Something went wrong");
       }
     }
+  },
+  connectSocket: () => {
+    const {authUser} = get();
+
+    if(!authUser || get().socket?.connected) return;
+
+    const socket = io(BASE_URL, {
+      withCredentials: true
+    })
+
+    socket.connect();
+    set({socket: socket})
+
+    socket.on("getOnlineUsers", (userIds) => {
+      set({onlineUsers: userIds})
+    })
+  },
+  disconnectSocket: () => {
+    if(get().socket?.connected)
+      get().socket?.disconnect();
   },
 }));

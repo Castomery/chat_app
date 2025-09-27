@@ -6,9 +6,9 @@ import messageRouter from './routes/message.routes.ts';
 import { connectToDB } from './configs/mongoDB.ts';
 import { ENV } from './configs/env.ts';
 import cookieParser from 'cookie-parser';
+import { app, server } from './configs/socket.ts';
 
 
-const app = express();
 const PORT = ENV.PORT;
 const __dirname = path.resolve();
 
@@ -34,6 +34,6 @@ if (ENV.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
