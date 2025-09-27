@@ -28,8 +28,8 @@ export const socketAuthMiddleware = async(socket : Socket, next : Function)=>{
             return next(new Error("User not found"));
         };
 
-        socket.user = user;
-        socket.userId = user._id.toString();
+        (socket as any).user = user;
+        (socket as any).userId = user._id.toString();
 
         next()
 
