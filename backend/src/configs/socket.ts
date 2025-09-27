@@ -1,8 +1,8 @@
 import {Server} from "socket.io";
 import http from "http";
 import express from "express";
-import {ENV} from "./env.ts"
-import { socketAuthMiddleware } from "../middleware/socket.auth.middleware.ts";
+import {ENV} from "./env.js"
+import { socketAuthMiddleware } from "../middleware/socket.auth.middleware.js";
 
 
 const app = express();
@@ -23,7 +23,7 @@ export function getReceiverSocketId(userId : any){
 
 const userSocketMap = {};
 
-socketServer.on("connection", (socket) => {
+socketServer.on("connection", (socket : any) => {
     console.log("User connected", (socket as any).user.fullName);
     const userId = (socket as any).userId;
     (userSocketMap as any)[userId] = socket.id;

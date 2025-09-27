@@ -1,9 +1,9 @@
-import MessageModel from "../models/message.model.ts"
-import UserModel from "../models/user.model.ts"
+import MessageModel from "../models/message.model.js"
+import UserModel from "../models/user.model.js"
 import type { Request, Response } from "express"
-import messageRouter from "../routes/message.routes.ts";
-import cloudinary from "../configs/cloudinary.ts";
-import { getReceiverSocketId, socketServer } from "../configs/socket.ts";
+import messageRouter from "../routes/message.routes.js";
+import cloudinary from "../configs/cloudinary.js";
+import { getReceiverSocketId, socketServer } from "../configs/socket.js";
 
 const getAllContacts = async (req: Request, res: Response) => {
 

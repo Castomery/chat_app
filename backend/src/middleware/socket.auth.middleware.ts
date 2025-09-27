@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import UserModel from "../models/user.model.ts";
-import {ENV} from '../configs/env.ts';
+import UserModel from "../models/user.model.js";
+import {ENV} from '../configs/env.js';
 import type { Socket } from "socket.io";
 
 export const socketAuthMiddleware = async(socket : Socket, next : Function)=>{

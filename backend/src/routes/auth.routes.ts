@@ -1,7 +1,7 @@
 import express from 'express';
-import { login, signUp,logout, updateProfile, checkAuth } from '../controllers/auth.controller.ts';
-import { authProtectRoute } from '../middleware/auth.middleware.ts';
-import arcjectProtection from '../middleware/arcject.middleware.ts';
+import { login, signUp,logout, updateProfile, checkAuth } from '../controllers/auth.controller.js';
+import { authProtectRoute } from '../middleware/auth.middleware.js';
+import arcjectProtection from '../middleware/arcject.middleware.js';
 
 const authRouter = express.Router();
 

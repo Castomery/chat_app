@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import authRouter from './routes/auth.routes.ts';
-import messageRouter from './routes/message.routes.ts';
-import { connectToDB } from './configs/mongoDB.ts';
-import { ENV } from './configs/env.ts';
+import authRouter from './routes/auth.routes.js';
+import messageRouter from './routes/message.routes.js';
+import { connectToDB } from './configs/mongoDB.js';
+import { ENV } from './configs/env.js';
 import cookieParser from 'cookie-parser';
-import { app, server } from './configs/socket.ts';
+import { app, server } from './configs/socket.js';
 
 
 const PORT = ENV.PORT;

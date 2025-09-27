@@ -1,5 +1,5 @@
 import {v2 as cloudinary} from 'cloudinary';
-import { ENV } from './env.ts';
+import { ENV } from './env.js';
 
 if(!ENV.CLOUDINARY_CLOUD_API || !ENV.CLOUDINARY_CLOUD_NAME || !ENV.CLOUDINARY_CLOUD_SECRET){
     throw new Error("Cloudinary environment variables missing");

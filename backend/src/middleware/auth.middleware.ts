@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import UserModel from "../models/user.model.ts";
-import { ENV } from "../configs/env.ts";
+import UserModel from "../models/user.model.js";
+import { ENV } from "../configs/env.js";
 import type { Request, Response } from "express";
 
 

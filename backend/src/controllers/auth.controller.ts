@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
-import UserModel from '../models/user.model.ts';
+import UserModel from '../models/user.model.js';
 import bcrypt from 'bcrypt';
-import generateToken from '../utils/generateToken.ts';
-import { sendWelcomeEmail } from '../emails/emailHandlers.ts';
-import { ENV } from '../configs/env.ts';
-import cloudinary from '../configs/cloudinary.ts';
+import generateToken from '../utils/generateToken.js';
+import { sendWelcomeEmail } from '../emails/emailHandlers.js';
+import { ENV } from '../configs/env.js';
+import cloudinary from '../configs/cloudinary.js';
 
 
 const login = async (req: Request, res: Response) => {
