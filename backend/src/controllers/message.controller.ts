@@ -3,6 +3,7 @@ import UserModel from "../models/user.model.ts"
 import type { Request, Response } from "express"
 import messageRouter from "../routes/message.routes.ts";
 import cloudinary from "../configs/cloudinary.ts";
+import { getReceiverSocketId, socketServer } from "../configs/socket.ts";
 
 const getAllContacts = async (req: Request, res: Response) => {
 
@@ -100,6 +101,12 @@ const sendMessage = async(req: Request, res: Response) => {
         });
 
         await newMessage.save();
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+
+        if(receiverSocketId){
+            socketServer.to(receiverSocketId).emit("newMessage", newMessage);
+        }
 
         res.status(201).json(newMessage);
 
