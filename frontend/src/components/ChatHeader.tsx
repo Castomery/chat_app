@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import { XIcon } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
@@ -7,7 +7,7 @@ const ChatHeader = () => {
 
     const { selectedUser, setSelectedUser } = useChatStore();
     const {onlineUsers} = useAuthStore();
-    const isOnline = onlineUsers.includes(selectedUser?._id);
+    const isOnline = selectedUser ? onlineUsers.includes(selectedUser?._id) : false;
 
     useEffect(() => {
         const handleEscKey = (e: KeyboardEvent) => {
